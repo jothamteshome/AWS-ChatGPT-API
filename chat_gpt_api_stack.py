@@ -47,13 +47,9 @@ class ChatGptApiStack(Stack):
         usage_plan = api.add_usage_plan(
             "UsagePlan",
             name="UsagePlan",
-            api_stages=[
-                apigw.usage_plan.ApiStage(
-                    stage=api.deployment_stage
-                )
-            ]
         )
         usage_plan.add_api_key(api_key)
+        usage_plan.add_api_stage(stage=api.deployment_stage)
 
         # Add the resource path (same as branch_name)
         resource = api.root.add_resource(branch_name,
