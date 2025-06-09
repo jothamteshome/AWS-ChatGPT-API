@@ -1,0 +1,50 @@
+name: Sync main deployment workflow files to other branches
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/deploy.yml
+      - app.py
+      - chat_gpt_api_stack.py
+      - requirements.txt
+
+jobs:
+  sync-deploy-workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Git config
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+
+      - name: Sync files to other branches
+        run: |
+          branches=(chat-conversation)
+          
+          for branch in $branches; do
+            echo "Syncing to branch $branch"
+            git fetch origin $branch
+            git checkout $branch
+            
+            # Restore files from origin/main into this branch
+            git fetch origin main
+            git restore --source=origin/main .github/workflows/deploy.yml app.py chat_gpt_api_stack.py requirements.txt
+
+            git add .github/workflows/deploy.yml app.py chat_gpt_api_stack.py requirements.txt
+            
+            if git diff --cached --quiet; then
+              echo "No changes to commit on $branch"
+            else
+              git commit -m "Sync main deployment workflow files from main"
+              git push origin $branch
+            fi
+          done
+          
+          git checkout main

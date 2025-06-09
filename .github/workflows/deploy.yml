@@ -1,0 +1,16 @@
+name: Deploy Lambda based on branch
+
+on:
+  push:
+    branches:
+      - chat-conversation
+
+jobs:
+  deploy:
+    uses: jothamteshome/AWS-ChatGPT-API/.github/workflows/reusable-deploy.yml@main
+
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      CHATGPT_API_EXECUTION_ROLE: ${{ secrets.CHATGPT_API_EXECUTION_ROLE }}

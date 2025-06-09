@@ -1,0 +1,48 @@
+name: Reusable Deploy Workflow
+
+on:
+  workflow_call:
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      OPENAI_API_KEY:
+        required: true
+      CHATGPT_API_EXECUTION_ROLE:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Node.js & CDK CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y nodejs npm
+          npm install -g aws-cdk
+
+      - name: Install CDK Python requirements
+        run: pip install -r requirements.txt
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: CDK Deploy
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          CHATGPT_API_EXECUTION_ROLE: ${{ secrets.CHATGPT_API_EXECUTION_ROLE }}
+        run: cdk deploy --app "python3 app.py" --context branch_name="${{ github.ref_name }}" --require-approval never
