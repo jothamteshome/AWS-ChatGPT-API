@@ -3,6 +3,7 @@ from aws_cdk import (
     aws_lambda as lambda_,
     aws_apigateway as apigw,
     aws_iam as iam,
+    aws_logs as logs,
     aws_lambda_python_alpha as lambda_python
 )
 from constructs import Construct
@@ -17,6 +18,12 @@ class ChatGptApiStack(Stack):
             role_arn=execution_role_arn
         )
 
+        log_group = logs.LogGroup(self, "ChatGPTApiChatConversationLogGroup",
+            log_group_name="/aws/lambda/ChatGPT-API-chat-conversation",
+            retention=logs.RetentionDays.ONE_WEEK,
+            removal_policy=RemovalPolicy.DESTROY
+        )
+
         # Lambda function itself
         fn = lambda_python.PythonFunction(
             self, f"ChatGptFunction",
@@ -26,6 +33,7 @@ class ChatGptApiStack(Stack):
             runtime=lambda_.Runtime.PYTHON_3_13,
             role=role,
             function_name=f"ChatGPT-API-{branch_name}",
+            log_group=log_group,
             environment={
                 "OPENAI_API_KEY": openai_api_key
             }
