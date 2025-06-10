@@ -5,7 +5,8 @@ from aws_cdk import (
     aws_iam as iam,
     aws_logs as logs,
     aws_lambda_python_alpha as lambda_python,
-    RemovalPolicy
+    RemovalPolicy,
+    Duration
 )
 from constructs import Construct
 
@@ -35,6 +36,8 @@ class ChatGptApiStack(Stack):
             role=role,
             function_name=f"ChatGPT-API-{branch_name}",
             log_group=log_group,
+            memory_size=1024,
+            timeout=Duration.seconds(30)
             environment={
                 "OPENAI_API_KEY": openai_api_key
             }
