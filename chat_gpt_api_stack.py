@@ -37,7 +37,7 @@ class ChatGptApiStack(Stack):
             function_name=f"ChatGPT-API-{branch_name}",
             log_group=log_group,
             memory_size=1024,
-            timeout=Duration.seconds(30)
+            timeout=Duration.seconds(30),
             environment={
                 "OPENAI_API_KEY": openai_api_key
             }
