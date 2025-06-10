@@ -4,7 +4,8 @@ from aws_cdk import (
     aws_apigateway as apigw,
     aws_iam as iam,
     aws_logs as logs,
-    aws_lambda_python_alpha as lambda_python
+    aws_lambda_python_alpha as lambda_python,
+    RemovalPolicy
 )
 from constructs import Construct
 
