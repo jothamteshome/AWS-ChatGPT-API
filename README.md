@@ -20,10 +20,14 @@ The Lambda function receives a list of messages and returns the assistant's repl
 
 ## Example Request
 
-```json
+```http
 POST /your-branch-name
-Headers: { "x-api-key": "your-key", "Content-Type": "application/json" }
+Host: your-api-host.amazonaws.com
+x-api-key: your-key
+Content-Type: application/json
+```
 
+```json
 {
   "messages": [
     { "role": "user", "content": "Hello!" }
