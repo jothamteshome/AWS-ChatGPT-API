@@ -8,7 +8,7 @@ on:
       - app.py
       - chat_gpt_api_stack.py
       - requirements.txt
-      - README
+      - README.md
 
 jobs:
   sync-deploy-workflow:
@@ -36,9 +36,9 @@ jobs:
             
             # Restore files from origin/main into this branch
             git fetch origin main
-            git restore --source=origin/main .github/workflows/deploy.yml app.py chat_gpt_api_stack.py requirements.txt README
+            git restore --source=origin/main .github/workflows/deploy.yml app.py chat_gpt_api_stack.py requirements.txt README.md
 
-            git add .github/workflows/deploy.yml app.py chat_gpt_api_stack.py requirements.txt README
+            git add .github/workflows/deploy.yml app.py chat_gpt_api_stack.py requirements.txt README.md
             
             if git diff --cached --quiet; then
               echo "No changes to commit on $branch"
